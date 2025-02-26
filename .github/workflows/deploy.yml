@@ -1,0 +1,34 @@
+name: Deploy Portfolio
+
+on:
+  push:
+    branches:
+      - main  # Trigger action only on the 'main' branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # The environment to run the action on
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2  # Checkout the repository code
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2  # If you're using Node.js (for example, with a build tool like Webpack)
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        run: |
+          npm install  # If you have npm dependencies (adjust this if you're using something else)
+
+      - name: Build project
+        run: |
+          npm run build  # Assuming you have a build script in your package.json
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4  # Deploys to GitHub Pages
+        with:
+          branch: gh-pages  # The branch to deploy to (you can use a different one)
+          folder: build  # Folder to deploy (adjust this to your build output folder)
+          token: ${{ secrets.GITHUB_TOKEN }}  # Uses a GitHub token for authorization
